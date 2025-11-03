@@ -1,24 +1,75 @@
 {
-  "name": "@repo/eslint-config",
-  "version": "0.0.0",
-  "type": "module",
-  "private": true,
-  "exports": {
-    "./base": "./base.js",
-    "./next-js": "./next.js",
-    "./react-internal": "./react-internal.js"
+  "name": "yan-eslint-config",
+  "version": "1.0.0",
+  "description": "JavaScript TypeScript Node 规范",
+  "keywords": [
+    "eslint",
+    "config",
+    "javascript",
+    "typescript",
+    "node"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint ./",
+    "test": "jest",
+    "print-config": "eslint --print-config ./index.js > ./print-config.json"
   },
+  "jest": {
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/__tests__/fixtures/"
+    ],
+    "collectCoverageFrom": [
+      "**/*.js",
+      "!**/__tests__/**",
+      "!**/node_modules/**"
+    ]
+  },
+  "files": [
+    "index.js",
+    "react.js",
+    "vue.js",
+    "es5.js",
+    "node.js",
+    "jsx-a11y.js",
+    "rules/",
+    "typescript/",
+    "essential/",
+    "README.md"
+  ],
   "devDependencies": {
-    "@eslint/js": "^9.34.0",
-    "@next/eslint-plugin-next": "^15.5.0",
-    "eslint": "^9.38.0",
-    "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-only-warn": "^1.1.0",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-turbo": "^2.5.0",
-    "globals": "^16.3.0",
-    "typescript": "^5.9.2",
-    "typescript-eslint": "^8.40.0"
+    "@babel/core": "^7.16.0",
+    "@babel/eslint-parser": "^7.16.3",
+    "@babel/preset-react": "^7.16.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.7.0",
+    "eslint-config-egg": "^10.0.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-jsx-plus": "^0.1.0",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-vue": "^7.3.0",
+    "lodash": "^4.17.21",
+    "jest": "^29.7.0",
+    "react": "^18.0.0",
+    "typescript": "^4.1.2",
+    "vue-eslint-parser": "^7.3.0"
+  },
+  "author": "frontzhm@163.com",
+  "homepage": "https://github.com/frontzhm/frontend-lint#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frontzhm/frontend-lint.git"
+  },
+  "bugs": {
+    "url": "https://github.com/frontzhm/frontend-lint/issues"
   }
 }
