@@ -1,0 +1,32 @@
+{
+  "name": "eslint-plugin-yan",
+  "version": "1.0.0",
+  "description": "自定义eslint插件",
+  "keywords": [
+    "eslint",
+    "plugin"
+  ],
+  "main": "src/index.js",
+  "files": [
+    "rules/**/*",
+    "index.js",
+    "README.md"
+  ],
+  "author": "frontzhm@163.com",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frontzhm/frontend-lint"
+  },
+  "homepage": "https://github.com/frontzhm/frontend-lint",
+  "bugs": {
+    "url": "https://github.com/frontzhm/frontend-lint/issues"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "jest": "^30.2.0"
+  }
+}
