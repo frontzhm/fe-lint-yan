@@ -1,12 +1,12 @@
 {
   "name": "eslint-plugin-yan",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "自定义eslint插件",
   "keywords": [
     "eslint",
     "plugin"
   ],
-  "main": "src/index.js",
+  "main": "index.js",
   "files": [
     "rules/**/*",
     "index.js",
