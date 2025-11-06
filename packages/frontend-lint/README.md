@@ -183,5 +183,36 @@ $ node cli.js init
 - 生成配置文件
 - 打印成功信息
 
+#### 检查是不是最新版本
 
+检查是不是最新版本的步骤：
 
+1. 获取包管理器（npm/pnpm）
+2. 执行 `npm view encode-fe-lint version` 获取最新版本
+3. 如果本地版本等于最新版本，返回 null
+4. 将版本号按 . 分割并转为数字数组（如 "1.2.3" → [1, 2, 3]）
+5. 逐位比较：
+6. 本地某位更大：返回 null（本地更新）
+7. 本地某位更小：返回 latestVersion（有新版本）
+8. 相等：继续下一位
+9. 注意：如果所有位都相等，函数会返回 undefined（可能是个小 bug，应返回 null）。
+
+1.1 怎么获取包管理器？
+用 `which pnpm` 命令检查 pnpm 是否可用，不可用返回 'npm'，可用返回 'pnpm'
+
+```js
+/**
+ * 读取本地包管理器
+ * @returns 'pnpm' | 'npm'
+ */
+function getPackageManagerLocal() {
+  try {
+    // 尝试执行 which pnpm 命令
+    require('child_process').execSync('which pnpm', { stdio: 'ignore' });
+    return 'pnpm';
+  } catch (error) {
+    // pnpm 不存在，返回 npm
+    return 'npm';
+  }
+}
+```
