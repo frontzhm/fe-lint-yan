@@ -29,6 +29,8 @@
     "url": "https://github.com/frontzhm/frontend-lint/issues"
   },
   "devDependencies": {
-    "commander": "^14.0.2"
+    "commander": "^14.0.2",
+    "consola": "^3.4.2",
+    "ora": "^5.4.1"
   }
 }

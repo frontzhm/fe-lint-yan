@@ -1,58 +1,243 @@
-function init({ cwd = require('process').cwd(), checkVersionUpdate = false }) {
-
-  if (checkVersionUpdate) {
-    checkVersion();
-  }
-  console.log('init', cwd, checkVersionUpdate);
-  console.log('初始化项目成功');
-}
+const { consola } = require('consola');
+const { execSync } = require('child_process');
+const ora = require('ora');
+const path = require('path');
+const fs = require('fs');
+const { name: pkgName, version: pkgVersion } = require('../package.json');
 
 /**
- * 作用：检查并比较版本号
-步骤：
-1.获取包管理器（npm/pnpm）
-2.执行 npm view encode-fe-lint version 获取最新版本
-3.如果本地版本等于最新版本，返回 null
-4.将版本号按 . 分割并转为数字数组（如 "1.2.3" → [1, 2, 3]）
-5.逐位比较：
-6.本地某位更大：返回 null（本地更新）
-7.本地某位更小：返回 latestVersion（有新版本）
-8.相等：继续下一位
-9.注意：如果所有位都相等，函数会返回 undefined（可能是个小 bug，应返回 null）。
-
-
-
-作用：检查版本并可选自动更新
-参数：
-install（默认 true）：是否自动安装
-流程：
-显示“正在检查最新版本...”的加载动画
-调用 checkLatestVersion() 获取最新版本
-根据结果处理：
-有新版本且 install === true：显示升级提示，执行 npm i -g encode-fe-lint 全局安装
-有新版本但 install === false：仅警告，提示手动升级
-无新版本且 install === true：提示“当前没有可用的更新”
-无新版本且 install === false：不输出
-异常处理：停止动画并输出错误
+ * 初始化项目
+ * @param {Object} [options={}] - 选项对象
+ * @param {string} [options.cwd=process.cwd()] - 工作目录，默认为当前目录
+ * @param {boolean} [options.isAutoUpdate=false] - 是否自动更新，默认为 false
  */
-function checkVersion() {
+async function init(options = {}) {
+  const { cwd = process.cwd(), isAutoUpdate = false } = options;
+  // 1. 检查版本
+  await checkAndUpdateVersion({ isAutoUpdate });
 
-  const packageManager = getPackageManagerLocal();
-  console.log('packageManager', packageManager);
-  
+  // 2. 初始化项目配置
+  await initProjectConfig({ cwd });
 }
+
 /**
- * 读取本地包管理器
- * @returns 'pnpm' | 'npm'
+ * 检查并更新版本
+ * @param {Object} [options={}] - 选项对象
+ * @param {boolean} [options.isAutoUpdate=false] - 是否自动更新
+ */
+async function checkAndUpdateVersion(options = {}) {
+  const { isAutoUpdate = false } = options;
+  const spinner = ora('正在检查版本...').start();
+  
+  try {
+    const { isInstalled, localVersion, latestVersion, isLatestVersion, packageManager } = 
+      checkVersionIsLatest(pkgName);
+
+    spinner.stop();
+
+    // 如果未安装
+    if (!isInstalled) {
+      consola.error(`请先全局安装包 ${pkgName}`);
+      consola.info(`运行: ${packageManager} install -g ${pkgName}`);
+      return;
+    }
+
+    // 如果不是最新版本
+    if (!isLatestVersion && latestVersion) {
+      if (isAutoUpdate) {
+        // 自动更新模式：提示并执行安装
+        consola.warn(`${pkgName} 存在新版本，当前版本: ${localVersion}，最新版本: ${latestVersion}`);
+        
+        const updateSpinner = ora(`正在升级至 ${latestVersion}...`).start();
+
+        try {
+          const installCommand = `${packageManager} install -g ${pkgName}@${latestVersion}`;
+          execSync(installCommand, { stdio: 'pipe' });
+          updateSpinner.succeed(`升级成功！当前版本: ${latestVersion}`);
+        } catch (error) {
+          updateSpinner.fail(`升级失败: ${error.message}`);
+          return;
+        }
+      } else {
+        // 非自动更新模式：仅提示
+        consola.warn(`${pkgName} 存在新版本`);
+        consola.info(`当前版本: ${localVersion}`);
+        consola.info(`最新版本: ${latestVersion}`);
+        consola.info(`运行: ${packageManager} install -g ${pkgName}@${latestVersion} 进行升级`);
+      }
+    } else if (isLatestVersion) {
+      // 如果已是最新版本
+      consola.success(`当前版本已是最新版本: ${localVersion}`);
+    }
+  } catch (error) {
+    spinner.fail('版本检查失败');
+    consola.error(error.message);
+  }
+}
+
+/**
+ * 初始化项目配置
+ * @param {Object} [options={}] - 选项对象
+ * @param {string} [options.cwd] - 工作目录
+ */
+async function initProjectConfig(options = {}) {
+  const { cwd } = options;
+  consola.info('开始初始化项目配置...');
+  
+  
+  // TODO: 实现项目配置初始化逻辑
+  // 1. 检查是否已存在配置文件
+  // 2. 交互式选择要接入的规范
+  // 3. 生成配置文件（.eslintrc.js, .prettierrc.js 等）
+  // 4. 安装相关依赖
+  
+  consola.success('项目配置初始化完成');
+}
+
+// ==================== 版本检查相关函数 ====================
+
+/**
+ * 检查版本是否是最新版本
+ * @param {string} packageName - 包名，默认为从 package.json 读取
+ * @returns {Object} 版本信息对象
+ */
+function checkVersionIsLatest(packageName = pkgName) {
+  const packageManager = getPackageManagerLocal();
+  const latestVersion = getLatestVersion(packageName);
+  const isInstalled = isPackageInstalledLocal({ packageManager, packageName });
+  const localVersion = getLocalVersion({ packageManager, packageName });
+  const isLatestVersion = detectIsLatestVersion({ localVersion, latestVersion });
+
+  return {
+    isInstalled,
+    localVersion,
+    latestVersion,
+    isLatestVersion,
+    packageManager,
+  };
+}
+
+/**
+ * 比较两个版本号
+ * @param {Object} options - 选项对象
+ * @param {string} options.localVersion - 本地版本号
+ * @param {string} options.latestVersion - 最新版本号
+ * @returns {boolean} true: 本地版本 >= 最新版本，false: 本地版本 < 最新版本
+ */
+function detectIsLatestVersion({ localVersion, latestVersion } = {}) {
+  if (!localVersion || !latestVersion) {
+    return false;
+  }
+  
+  if (localVersion === latestVersion) {
+    return true;
+  }
+
+  const localParts = localVersion.split('.').map(Number);
+  const latestParts = latestVersion.split('.').map(Number);
+  const maxLen = Math.max(localParts.length, latestParts.length);
+
+  for (let i = 0; i < maxLen; i++) {
+    const localNum = localParts[i] || 0;
+    const latestNum = latestParts[i] || 0;
+
+    if (localNum > latestNum) return true;
+    if (localNum < latestNum) return false;
+  }
+
+  return true;
+}
+
+/**
+ * 获取包的最新版本
+ * @param {string} packageName - 包名
+ * @returns {string|null} 最新版本号，获取失败返回 null
+ */
+function getLatestVersion(packageName = pkgName) {
+  try {
+    const command = `npm view ${packageName} version`;
+    const version = execSync(command, {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore']
+    }).trim();
+    return version || null;
+  } catch (error) {
+    return null;
+  }
+}
+
+/**
+ * 获取本地安装的包版本
+ * @param {Object} options - 选项对象
+ * @param {string} options.packageManager - 包管理器
+ * @param {string} options.packageName - 包名
+ * @returns {string} 本地版本号，获取失败返回 ''
+ */
+function getLocalVersion({ packageManager = 'npm', packageName = pkgName } = {}) {
+  try {
+    const command = `${packageManager} list -g ${packageName} --depth=0`;
+    const output = execSync(command, {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore']
+    });
+
+    const escapedName = packageName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    // npm 输出格式：└── packageName@1.0.0 或 `-- packageName@1.0.0
+    const npmPattern = new RegExp(`[└\`]--\\s+${escapedName}@([\\d.]+)`, 'm');
+    const npmMatch = output.match(npmPattern);
+    if (npmMatch && npmMatch[1]) {
+      return npmMatch[1];
+    }
+
+    // pnpm 输出格式：packageName 1.0.0 或 packageName@1.0.0
+    const pnpmPattern1 = new RegExp(`^${escapedName}\\s+([\\d.]+)$`, 'm');
+    const pnpmPattern2 = new RegExp(`${escapedName}@([\\d.]+)`, 'm');
+    const pnpmMatch1 = output.match(pnpmPattern1);
+    const pnpmMatch2 = output.match(pnpmPattern2);
+
+    if (pnpmMatch1 && pnpmMatch1[1]) return pnpmMatch1[1];
+    if (pnpmMatch2 && pnpmMatch2[1]) return pnpmMatch2[1];
+
+    return '';
+  } catch (error) {
+    return '';
+  }
+}
+
+/**
+ * 检查包是否已安装（全局）
+ * @param {Object} options - 选项对象
+ * @param {string} options.packageManager - 包管理器
+ * @param {string} options.packageName - 包名
+ * @returns {boolean} 是否已安装
+ */
+function isPackageInstalledLocal({ packageManager = 'npm', packageName = pkgName } = {}) {
+  try {
+    const command = `${packageManager} list -g ${packageName} --depth=0`;
+    const output = execSync(command, {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore']
+    });
+
+    const escapedName = packageName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp(escapedName).test(output);
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * 获取本地包管理器
+ * @returns {'pnpm' | 'npm'} 包管理器名称
  */
 function getPackageManagerLocal() {
   try {
-    // 尝试执行 which pnpm 命令
-    require('child_process').execSync('which pnpm', { stdio: 'ignore' });
+    execSync('which pnpm', { stdio: 'ignore' });
     return 'pnpm';
   } catch (error) {
-    // pnpm 不存在，返回 npm
     return 'npm';
   }
 }
+
 module.exports = init;

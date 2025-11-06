@@ -189,7 +189,7 @@ $ node cli.js init
 
 1. 获取包管理器（npm/pnpm）
 2. 执行 `npm view encode-fe-lint version` 获取最新版本
-3. 如果本地版本等于最新版本，返回 null
+3. 比较本地版本和最新版本
 4. 将版本号按 . 分割并转为数字数组（如 "1.2.3" → [1, 2, 3]）
 5. 逐位比较：
 6. 本地某位更大：返回 null（本地更新）
@@ -214,5 +214,160 @@ function getPackageManagerLocal() {
     // pnpm 不存在，返回 npm
     return 'npm';
   }
+}
+```
+
+1.2 怎么获取最新版本？
+
+使用 `npm view` 命令获取最新版本
+
+```js
+/**
+ * 获取包的最新版本
+ * @param {string} packageName - 包名，默认为 'yan-frontend-lint'
+ * @returns {string|null} 最新版本号，获取失败返回 null
+ */
+function getLatestVersion(packageName = 'yan-frontend-lint') {
+  try {
+    // 使用 npm view 命令获取最新版本
+    const command = `npm view ${packageName} version`;
+    const version = require('child_process')
+      .execSync(command, {
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'], // 忽略 stdin 和 stderr，只捕获 stdout
+      })
+      .trim();
+    return version || null;
+  } catch (error) {
+    // 获取失败（网络问题、包不存在等）
+    console.error(`获取 ${packageName} 最新版本失败:`, error.message);
+    return null;
+  }
+}
+```
+
+1.3 怎么检查本地有没有安装这个包？
+使用 `npm list` 命令检查本地有没有安装这个包
+
+```js
+/**
+ * 检查包是否已安装（全局）
+ * @param {Object} { packageManager = 'npm', packageName = 'yan-frontend-lint' } - 包管理器和包名
+ * @returns {boolean} 是否已安装
+ */
+function isPackageInstalledLocal({ packageManager, packageName }) {
+  try {
+    const command = `${packageManager} list -g ${packageName} --depth=0`;
+    const output = require('child_process').execSync(command, {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+
+    // 检查输出中是否包含包名
+    const escapedName = packageName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp(escapedName).test(output);
+  } catch (error) {
+    // 命令执行失败，说明包未安装
+    return false;
+  }
+}
+```
+
+1.4 怎么获取本地版本？
+使用 `npm list` 命令获取本地版本
+
+```js
+/**
+ * 获取本地安装的包版本
+ * @param {Object} { packageManager = 'npm', packageName = 'yan-frontend-lint' } - 包管理器和包名
+ * @returns {string} 本地版本号，获取失败返回 ''
+ */
+function getLocalVersion({
+  packageManager = 'npm',
+  packageName = 'yan-frontend-lint',
+} = {}) {
+  try {
+    const command = `${packageManager} list -g ${packageName} --depth=0`;
+    const output = require('child_process').execSync(command, {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+
+    // 解析输出，查找版本号
+    // 输出格式可能是: yan-frontend-lint@1.0.0 或 /path/to/node_modules/yan-frontend-lint@1.0.0
+    const versionMatch = output.match(
+      new RegExp(
+        `${packageName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}@([\\d.]+)`
+      )
+    );
+    if (versionMatch && versionMatch[1]) {
+      return versionMatch[1];
+    }
+    return '';
+  } catch (error) {
+    console.error(`获取 ${packageName} 本地版本失败:`, error.message);
+    return '';
+  }
+}
+```
+
+1.5 怎么比较本地版本和最新版本？
+
+比较本地版本和最新版本的步骤：
+
+1. 将版本号按 . 分割并转为数字数组（如 "1.2.3" → [1, 2, 3]）
+2. 获取最大长度，补齐较短的版本号
+3. 逐位比较：
+4. 本地某位更大：返回 true（本地更新）
+5. 本地某位更小：返回 false（有新版本）
+6. 相等：继续下一位
+7. 注意：如果所有位都相等，函数会返回 true（已是最新版本）。
+
+```js
+/**
+ * 比较两个版本号
+ * @param {Object} { localVersion: string, latestVersion: string } - 本地版本号和最新版本号
+ * @returns {boolean|null}
+ *   - true: 本地版本 >= 最新版本（已是最新版本）
+ *   - false: 本地版本 < 最新版本（有新版本）
+ *   - null: 任一版本为空，无法比较
+ */
+
+function detectIsLatestVersion({ localVersion, latestVersion } = {}) {
+  // 如果任一版本为空，无法比较
+  if (!localVersion || !latestVersion) {
+    return null;
+  }
+  if (localVersion === latestVersion) {
+    return true;
+  }
+
+  // 将版本号按 . 分割并转为数字数组（如 "1.2.3" → [1, 2, 3]）
+  const localParts = localVersion.split('.').map(Number);
+  const latestParts = latestVersion.split('.').map(Number);
+
+  // 获取最大长度，补齐较短的版本号
+  const maxLen = Math.max(localParts.length, latestParts.length);
+
+  // 逐位比较
+  for (let i = 0; i < maxLen; i++) {
+    const localNum = localParts[i] || 0;
+    const latestNum = latestParts[i] || 0;
+
+    // 本地某位更大：返回 true（本地更新）
+    if (localNum > latestNum) {
+      return true;
+    }
+
+    // 本地某位更小：返回 false（有新版本）
+    if (localNum < latestNum) {
+      return false;
+    }
+
+    // 相等：继续下一位
+  }
+
+  // 所有位都相等，返回 true（已是最新版本）
+  return true;
 }
 ```
