@@ -172,3 +172,16 @@ $ node cli.js init
 这样就有了框架，后续就是补充功能了。
 
 ### 补充init功能
+
+预期功能：
+
+![lint_cli_1.png](https://blog-huahua.oss-cn-beijing.aliyuncs.com/blog/code/lint_cli_1.png)
+
+- 检查是不是最新版本
+- 按提示选择要接入的规范
+- 安装依赖
+- 生成配置文件
+- 打印成功信息
+
+
+

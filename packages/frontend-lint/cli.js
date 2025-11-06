@@ -1,4 +1,5 @@
 const { program } = require('commander');
+const init = require('./commands/init');
 
 program
   .name('yan-frontend-lint')
@@ -9,8 +10,9 @@ program
 program
   .command('init')
   .description('初始化项目')
-  .action(() => {
-    console.log('初始化项目');
+  .action(async (cmd) => {
+    await init({cwd: require('process').cwd(), checkVersionUpdate: true});
+    
   });
 
 program
