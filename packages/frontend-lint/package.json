@@ -1,0 +1,34 @@
+{
+  "name": "yan-frontend-lint",
+  "version": "1.0.0",
+  "description": "自定义的前端编码规范工程化配套 Lint 工具",
+  "keywords": [
+    "frontend",
+    "lint",
+    "frontend-lint",
+    "yan-frontend-lint"
+  ],
+  "main": "index.js",
+  "bin": "cli.js",
+  "files": [
+    "index.js",
+    "cli.js",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "frontzhm@163.com",
+  "homepage": "https://github.com/frontzhm/frontend-lint#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frontzhm/frontend-lint.git"
+  },
+  "bugs": {
+    "url": "https://github.com/frontzhm/frontend-lint/issues"
+  },
+  "devDependencies": {
+    "commander": "^14.0.2"
+  }
+}
