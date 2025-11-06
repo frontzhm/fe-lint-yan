@@ -1,9 +1,57 @@
 const { consola } = require('consola');
 const { execSync } = require('child_process');
 const ora = require('ora');
+const { default: inquirer } = require('inquirer');
 const path = require('path');
 const fs = require('fs');
 const { name: pkgName, version: pkgVersion } = require('../package.json');
+
+const PROJECT_TYPES = [
+  {
+    name: '未使用 React、Vue、Node.js 的项目（JavaScript）',
+    value: 'index',
+  },
+  {
+    name: '未使用 React、Vue、Node.js 的项目（TypeScript）',
+    value: 'typescript',
+  },
+  {
+    name: 'React 项目（JavaScript）',
+    value: 'react',
+  },
+  {
+    name: 'React 项目（TypeScript）',
+    value: 'typescript/react',
+  },
+  {
+    name: 'Rax 项目（JavaScript）',
+    value: 'rax',
+  },
+  {
+    name: 'Rax 项目（TypeScript）',
+    value: 'typescript/rax',
+  },
+  {
+    name: 'Vue 项目（JavaScript）',
+    value: 'vue',
+  },
+  {
+    name: 'Vue 项目（TypeScript）',
+    value: 'typescript/vue',
+  },
+  {
+    name: 'Node.js 项目（JavaScript）',
+    value: 'node',
+  },
+  {
+    name: 'Node.js 项目（TypeScript）',
+    value: 'typescript/node',
+  },
+  {
+    name: '使用 ES5 及之前版本 JavaScript 的老项目',
+    value: 'es5',
+  },
+];
 
 /**
  * 初始化项目
@@ -28,9 +76,9 @@ async function init(options = {}) {
 async function checkAndUpdateVersion(options = {}) {
   const { isAutoUpdate = false } = options;
   const spinner = ora('正在检查版本...').start();
-  
+
   try {
-    const { isInstalled, localVersion, latestVersion, isLatestVersion, packageManager } = 
+    const { isInstalled, localVersion, latestVersion, isLatestVersion, packageManager } =
       checkVersionIsLatest(pkgName);
 
     spinner.stop();
@@ -47,7 +95,7 @@ async function checkAndUpdateVersion(options = {}) {
       if (isAutoUpdate) {
         // 自动更新模式：提示并执行安装
         consola.warn(`${pkgName} 存在新版本，当前版本: ${localVersion}，最新版本: ${latestVersion}`);
-        
+
         const updateSpinner = ora(`正在升级至 ${latestVersion}...`).start();
 
         try {
@@ -81,16 +129,49 @@ async function checkAndUpdateVersion(options = {}) {
  * @param {string} [options.cwd] - 工作目录
  */
 async function initProjectConfig(options = {}) {
-  const { cwd } = options;
+  const { cwd = process.cwd() } = options;
   consola.info('开始初始化项目配置...');
-  
-  
-  // TODO: 实现项目配置初始化逻辑
-  // 1. 检查是否已存在配置文件
-  // 2. 交互式选择要接入的规范
-  // 3. 生成配置文件（.eslintrc.js, .prettierrc.js 等）
-  // 4. 安装相关依赖
-  
+  // 获取项目根目录的配置文件`.yan-lint.config.js`
+  const configFilePath = path.join(cwd, `.${pkgName}.config.js`);
+  // 或者`yan-lint.config.js`
+  const configFilePath2 = path.join(cwd, `${pkgName}.config.js`);
+
+  if (fs.existsSync(configFilePath) || fs.existsSync(configFilePath2)) {
+    consola.info(`${pkgName} 项目配置文件已存在，跳过初始化`);
+    return;
+  }
+  let step = 0;
+
+
+  const { type: eslintType } = await inquirer.prompt({
+    type: 'list',
+    name: 'type',
+    message: `Step ${++step}. 请选择项目的语言（JS/TS）和框架（React/Vue）类型：`,
+    choices: PROJECT_TYPES,
+  });
+  const { enable: enableStylelint } = await inquirer.prompt({
+    type: 'confirm',
+    name: 'enable',
+    message: `Step ${++step}. 是否需要使用 stylelint（若没有样式文件则不需要）：`,
+    default: true,
+  });
+
+const { enable: enableMarkdownlint } = await inquirer.prompt({
+  type: 'confirm',
+  name: 'enable',
+  message: `Step ${++step}. 是否需要使用 markdownlint（若没有 Markdown 文件则不需要）：`,
+  default: true,
+});
+const { enable: enablePrettier } = await inquirer.prompt({
+  type: 'confirm',
+  name: 'enable',
+  message: `Step ${++step}. 是否需要使用 Prettier 格式化代码：`,
+  default: true,
+});
+
+
+  consola.info(`你选择了: ${eslintType}`);
+
   consola.success('项目配置初始化完成');
 }
 
@@ -128,7 +209,7 @@ function detectIsLatestVersion({ localVersion, latestVersion } = {}) {
   if (!localVersion || !latestVersion) {
     return false;
   }
-  
+
   if (localVersion === latestVersion) {
     return true;
   }

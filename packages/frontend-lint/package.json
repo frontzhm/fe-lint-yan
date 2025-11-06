@@ -16,7 +16,9 @@
     "README.md"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "encode-fe-lint-scan": "encode-fe-lint scan",
+    "encode-fe-lint-fix": "encode-fe-lint fix"
   },
   "author": "frontzhm@163.com",
   "homepage": "https://github.com/frontzhm/frontend-lint#readme",
@@ -31,6 +33,13 @@
   "devDependencies": {
     "commander": "^14.0.2",
     "consola": "^3.4.2",
+    "inquirer": "^12.10.0",
     "ora": "^5.4.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "encode-fe-lint commit-file-scan",
+      "commit-msg": "encode-fe-lint commit-msg-scan"
+    }
   }
 }
