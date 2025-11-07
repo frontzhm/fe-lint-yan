@@ -98,13 +98,13 @@ export default defineConfig({
       },
       {
         text: '脚手架',
-        items: [{ text: 'fe-lint', link: '/cli/fe-lint.md' }],
+        items: [{ text: 'fe-lint-yan', link: '/cli/fe-lint-yan.md' }],
       },
     ],
     footer: {
       message: '2025',
       copyright:
-        'encode studio | <a href="https://github.com/frontzhm/fe-lint-yan" target="_blank">github</a>',
+        'yan studio | <a href="https://github.com/frontzhm/fe-lint-yan" target="_blank">github</a>',
     },
     head: [
       ['link', { rel: 'icon', href: '/img/logo.png' }],
