@@ -1,6 +1,6 @@
 # Demo Project
 
-这是一个演示项目，用于展示如何使用 `@frontend-lint/markdown-lint-config`。
+这是一个演示项目，用于展示如何使用 `markdownlint-config-yan`。
 
 ## 功能特性
 

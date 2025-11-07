@@ -1,3 +1,3 @@
-const yanCommitLintConfig = require('yan-commitlint-config');
+const yanCommitLintConfig = require('commitlint-config-yan');
 
 module.exports = yanCommitLintConfig;

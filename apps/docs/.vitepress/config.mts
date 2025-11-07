@@ -104,7 +104,7 @@ export default defineConfig({
     footer: {
       message: '2025',
       copyright:
-        'encode studio | <a href="https://github.com/frontzhm/frontend-lint" target="_blank">github</a>',
+        'encode studio | <a href="https://github.com/frontzhm/fe-lint-yan" target="_blank">github</a>',
     },
     head: [
       ['link', { rel: 'icon', href: '/img/logo.png' }],

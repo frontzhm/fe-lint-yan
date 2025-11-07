@@ -1,0 +1,32 @@
+{
+  "name": "markdownlint-config-yan",
+  "version": "1.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "markdown文档规范",
+  "main": "index.json",
+  "files": [
+    "index.json",
+    "README.md"
+  ],
+  "keywords": [
+    "markdown",
+    "lint",
+    "markdownlint",
+    "markdownlint-config"
+  ],
+  "author": "frontzhm@163.com",
+  "homepage": "https://github.com/frontzhm/fe-lint-yan#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frontzhm/fe-lint-yan.git"
+  },
+  "bugs": {
+    "url": "https://github.com/frontzhm/fe-lint-yan/issues"
+  },
+  "peerDependencies": {
+    "markdownlint": "^0.29.0"
+  }
+}

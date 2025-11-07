@@ -43,3 +43,4 @@ yarn-error.log*
 turbo_lint.md
 z-md
 print-config.json
+frontend-lint-local/

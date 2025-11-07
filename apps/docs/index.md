@@ -40,19 +40,19 @@ features:
 
 | 规约 | Lint 工具 | NPM包 |
 | -------- | -------- | -------- |
-| JavaScript 编码规范 <br/> TypeScript 编码规范  <br/> Node 编码规范   |  [ESLint](https://eslint.org/)   | [yan-eslint-config](https://www.npmjs.com/package/yan-eslint-config) |
-| CSS 编码规范     |  [stylelint](https://stylelint.io/)  | [yan-stylelint-config](https://www.npmjs.com/package/yan-stylelint-config) |
-| Git 规范    |  [commitlint](https://commitlint.js.org/#/)  | [yan-commitlint-config](https://www.npmjs.com/package/yan-commitlint-config) |
-| 文档规范     |  [markdownlint](https://github.com/DavidAnson/markdownlint)  | [yan-markdownlint-config](https://www.npmjs.com/package/yan-markdownlint-config) |
+| JavaScript 编码规范 <br/> TypeScript 编码规范  <br/> Node 编码规范   |  [ESLint](https://eslint.org/)   | [eslint-config-yan](https://www.npmjs.com/package/eslint-config-yan) |
+| CSS 编码规范     |  [stylelint](https://stylelint.io/)  | [stylelint-config-yan](https://www.npmjs.com/package/stylelint-config-yan) |
+| Git 规范    |  [commitlint](https://commitlint.js.org/#/)  | [commitlint-config-yan](https://www.npmjs.com/package/commitlint-config-yan) |
+| 文档规范     |  [markdownlint](https://github.com/DavidAnson/markdownlint)  | [markdownlint-config-yan](https://www.npmjs.com/package/markdownlint-config-yan) |
 
-[yan-spec-cli](https://www.npmjs.com/package/yan-spec-cli) 收敛屏蔽了上述依赖和配置细节，提供简单的 `CLI` 和 `Node.js API`，让项目能够一键接入、一键扫描、一键修复、一键升级，并为项目配置 git commit 卡口，降低项目接入规约的成本。
+[fe-lint-yan](https://www.npmjs.com/package/fe-lint-yan) 收敛屏蔽了上述依赖和配置细节，提供简单的 `CLI` 和 `Node.js API`，让项目能够一键接入、一键扫描、一键修复、一键升级，并为项目配置 git commit 卡口，降低项目接入规约的成本。
 
-您可以使用[yan-spec-cli](https://www.npmjs.com/package/yan-spec-cli) 方便地为项目接入全部规范。
+您可以使用[fe-lint-yan](https://www.npmjs.com/package/fe-lint-yan) 方便地为项目接入全部规范。
 
 </br>
 
 ## :email: 联系
 
--   **GitHub**: <https://github.com/frontzhm/frontend-lint>
+-   **GitHub**: <https://github.com/frontzhm/fe-lint-yan>
 
 </br>

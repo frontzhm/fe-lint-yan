@@ -6,7 +6,7 @@ tags:
     - 编码规范
 author:
     name: frontzhm
-    link: https://github.com/frontzhm/frontend-lint
+    link: https://github.com/frontzhm/fe-lint-yan
 ---
 
 # HTML 编码规范

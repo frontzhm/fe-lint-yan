@@ -1,5 +1,5 @@
 {
-  "name": "frontend-lint",
+  "name": "fe-lint-yan",
   "private": true,
   "scripts": {
     "build": "turbo run build",
@@ -22,10 +22,10 @@
     "prettier": "^3.6.2",
     "turbo": "^2.5.8",
     "typescript": "5.9.2",
-    "yan-commitlint-config": "workspace:*",
-    "yan-markdownlint-config": "workspace:*"
+    "commitlint-config-yan": "workspace:*",
+    "markdownlint-config-yan": "workspace:*"
   },
-  "packageManager": "pnpm",
+  "packageManager": "pnpm@10.18.3",
   "engines": {
     "node": ">=20"
   }

@@ -1,0 +1,30 @@
+{
+  "name": "commitlint-config-yan",
+  "version": "1.0.2",
+  "description": "commit lint config",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "README.md"
+  ],
+  "keywords": [
+    "commit",
+    "lint",
+    "commitlint",
+    "commitlint-config"
+  ],
+  "author": "frontzhm@163.com",
+  "homepage": "https://github.com/frontzhm/fe-lint-yan#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frontzhm/fe-lint-yan.git"
+  },
+  "bugs": {
+    "url": "https://github.com/frontzhm/fe-lint-yan/issues"
+  },
+  "peerDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0"
+  }
+}

@@ -6,7 +6,7 @@ tags:
     - 工程规范
 author:
     name: 澄怀
-    link: https://github.com/frontzhm/frontend-lint
+    link: https://github.com/frontzhm/fe-lint-yan
 ---
 
 # CHANGELOG 规范

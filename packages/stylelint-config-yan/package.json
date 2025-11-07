@@ -1,0 +1,41 @@
+{
+  "name": "stylelint-config-yan",
+  "version": "1.0.1",
+  "description": "css规范",
+  "keywords": [
+    "stylelint",
+    "config",
+    "css",
+    "frontend",
+    "lint"
+  ],
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "jest"
+  },
+  "peerDependencies": {
+    "stylelint": ">=8.3.0",
+    "stylelint-scss": ">=2.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "postcss-less": "^6.0.0",
+    "postcss-scss": "^4.0.9",
+    "stylelint": "^14.3.0",
+    "stylelint-scss": "^4.1.0"
+  },
+  "author": "frontzhm@163.com",
+  "homepage": "https://github.com/frontzhm/fe-lint-yan#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frontzhm/fe-lint-yan.git"
+  },
+  "bugs": {
+    "url": "https://github.com/frontzhm/fe-lint-yan/issues"
+  }
+}
