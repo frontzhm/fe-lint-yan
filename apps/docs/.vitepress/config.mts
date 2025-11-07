@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  base: '/frontend-lint/',
+  base: '/fe-lint-yan/',
   text: "前端编码规范",
   description: "前端编码规范",
   themeConfig: {
@@ -30,11 +30,11 @@ export default defineConfig({
       {
         text: 'NPM包',
         items: [
-          { text: 'eslint-config', link: '/npm/eslint.md' },
-          { text: 'stylelint-config', link: '/npm/stylelint.md' },
-          { text: 'commitlint-config', link: '/npm/commitlint.md' },
-          { text: 'markdownlint-config', link: '/npm/markdownlint.md' },
-          { text: 'eslint-plugin', link: '/npm/eslint-plugin.md' },
+          { text: 'eslint-config-yan', link: '/npm/eslint.md' },
+          { text: 'stylelint-config-yan', link: '/npm/stylelint.md' },
+          { text: 'commitlint-config-yan', link: '/npm/commitlint.md' },
+          { text: 'markdownlint-config-yan', link: '/npm/markdownlint.md' },
+          { text: 'eslint-plugin-yan', link: '/npm/eslint-plugin.md' },
         ],
       },
       {
