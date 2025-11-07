@@ -5,7 +5,7 @@ categories:
 tags:
     - 工程规范
 author:
-    name: 澄怀
+    name: 颜酱
     link: https://github.com/frontzhm/fe-lint-yan
 ---
 

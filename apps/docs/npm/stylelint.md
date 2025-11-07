@@ -6,7 +6,7 @@ tags:
   - 工程规范
 author:
   name: 颜酱
-  link: https://frontzhm.github.io/fe-lint-yan
+  link: https://github.com/frontzhm/fe-lint-yan
 ---
 
 # stylelint-config-yan
