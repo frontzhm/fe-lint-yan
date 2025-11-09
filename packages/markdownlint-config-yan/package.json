@@ -27,6 +27,6 @@
     "url": "https://github.com/frontzhm/fe-lint-yan/issues"
   },
   "peerDependencies": {
-    "markdownlint": "^0.29.0"
+    "markdownlint": "^0.25.1"
   }
 }
