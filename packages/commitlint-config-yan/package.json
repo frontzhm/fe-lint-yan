@@ -1,6 +1,6 @@
 {
   "name": "commitlint-config-yan",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "commit lint config",
   "main": "index.js",
   "files": [
